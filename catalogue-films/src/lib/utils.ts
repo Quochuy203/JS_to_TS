@@ -21,7 +21,7 @@ interface film {
   annee: number;
   genres: genre[];
   note: number;
-  status: statut;
+  statut: statut;
 }
 
 export const FILMS = [
@@ -91,11 +91,11 @@ export function filtrerParGenre(liste: film[], genre: genre | undefined): film[]
 // `statut` est une chaîne quelconque : rien n'empêche d'écrire "Vu",
 // "vue" ou "à voir". Une faute de frappe passe inaperçue.
 
-export function estVu(film: film[]):statut {
-  return film.statut === "vu" ? "Déjà vu" : "À voir";
+export function estVu(film: film): boolean {
+  return film.statut === "vu";
 }
 
-export function libelleStatut(film) {
+export function libelleStatut(film: film): string {
   if (film.statut === "vu") return "Déjà vu";
   if (film.statut === "a_voir") return "À voir";
   if (film.statut === "abandonne") return "Abandonné";
@@ -105,12 +105,13 @@ export function libelleStatut(film) {
 // --- 7. Une valeur venue de l'extérieur --------------------------------
 // localStorage.getItem renvoie null quand la clé n'existe pas.
 
-export function chargerFavoris() {
+export function chargerFavoris(): number[] {
   const brut = localStorage.getItem("favoris");
-  return JSON.parse(brut);
+  if (!brut) return [];
+  return JSON.parse(brut) as number[];
 }
 
-export function enregistrerFavoris(favoris) {
+export function enregistrerFavoris(favoris: number[]): void {
   localStorage.setItem("favoris", JSON.stringify(favoris));
 }
 
@@ -118,7 +119,7 @@ export function enregistrerFavoris(favoris) {
 // On veut pouvoir modifier un ou plusieurs champs d'un film, sans avoir
 // à tous les repasser. Quel type décrit « quelques champs de Film » ?
 
-export function mettreAJour(film, modifications) {
+export function mettreAJour(film: film, modifications: Partial<film>): film {
   return { ...film, ...modifications };
 }
 
@@ -128,7 +129,7 @@ export function mettreAJour(film, modifications) {
 
 let prochainId = 100;
 
-export function creer(nouveauFilm) {
+export function creer(nouveauFilm: Omit<film, "id">): film {
   return { id: prochainId++, ...nouveauFilm };
 }
 
@@ -136,7 +137,9 @@ export function creer(nouveauFilm) {
 // Cette fonction modifie l'objet reçu au lieu d'en renvoyer un nouveau.
 // Le typage ne l'interdira pas — mais `readonly` peut aider.
 
-export function ajouterNote(film, nouvelleNote) {
-  film.note = (film.note + nouvelleNote) / 2;
-  return film;
+export function ajouterNote(film: Readonly<film>, nouvelleNote: number): film {
+  return {
+    ...film,
+    note: (film.note + nouvelleNote) / 2,
+  };
 }
