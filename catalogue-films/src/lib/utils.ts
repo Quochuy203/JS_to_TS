@@ -12,10 +12,10 @@
 // =====================================================================
 
 // --- Données de démonstration ----------------------------------------
-type statut = "vu" | "a_voir" | "abandonne"
-type genre = "SF" | "Horreur" | "Thriller" | "Drame" | "Aventure"
+export type statut = "vu" | "a_voir" | "abandonne"
+export type genre = "SF" | "Horreur" | "Thriller" | "Drame" | "Aventure"
 
-interface film {
+export interface film {
   id: number;
   titre: string;
   annee: number;
