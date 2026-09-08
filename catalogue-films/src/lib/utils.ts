@@ -1,17 +1,3 @@
-// =====================================================================
-//  utils.js — Catalogue de films
-//  TP1 — React.js & TypeScript
-//
-//  Ce module fonctionne parfaitement en JavaScript.
-//  Votre travail : le renommer en utils.ts et le faire passer en mode
-//  strict, sans utiliser `any`, jusqu'à ce que `npx tsc --noEmit` se
-//  taise complètement.
-//
-//  Traitez les erreurs UNE PAR UNE, dans l'ordre où le compilateur les
-//  donne. Chaque bloc numéroté ci-dessous cache un problème différent.
-// =====================================================================
-
-// --- Données de démonstration ----------------------------------------
 export type statut = "vu" | "a_voir" | "abandonne"
 export type genre = "SF" | "Horreur" | "Thriller" | "Drame" | "Aventure"
 
@@ -24,7 +10,7 @@ export interface film {
   statut: statut;
 }
 
-export const FILMS = [
+export const FILMS: film[] = [
   { id: 1, titre: "Alien", annee: 1979, genres: ["SF", "Horreur"], note: 8.5, statut: "vu" },
   { id: 2, titre: "Blade Runner", annee: 1982, genres: ["SF", "Thriller"], note: 8.1, statut: "vu" },
   { id: 3, titre: "Arrival", annee: 2016, genres: ["SF", "Drame"], note: 7.9, statut: "a_voir" },
