@@ -1,16 +1,16 @@
-export type statut = "vu" | "a_voir" | "abandonne"
-export type genre = "SF" | "Horreur" | "Thriller" | "Drame" | "Aventure"
+export type Statut = "vu" | "a_voir" | "abandonne"
+export type Genre = "SF" | "Horreur" | "Thriller" | "Drame" | "Aventure"
 
-export interface film {
+export interface Film {
   id: number;
   titre: string;
   annee: number;
-  genres: genre[];
+  genres: Genre[];
   note: number;
-  statut: statut;
+  statut: Statut;
 }
 
-export const FILMS: film[] = [
+export const FILMS: Film[] = [
   { id: 1, titre: "Alien", annee: 1979, genres: ["SF", "Horreur"], note: 8.5, statut: "vu" },
   { id: 2, titre: "Blade Runner", annee: 1982, genres: ["SF", "Thriller"], note: 8.1, statut: "vu" },
   { id: 3, titre: "Arrival", annee: 2016, genres: ["SF", "Drame"], note: 7.9, statut: "a_voir" },
@@ -25,7 +25,7 @@ export function formaterTitre(titre: string, annee: number): string {
   return `${titre} (${annee})`;
 }
 
-export function resume(film: film): string {
+export function resume(film: Film): string {
   return `${film.titre} — ${film.annee} — ${film.note}/10 — ${film.genres.join(", ")}`;
 }
 
@@ -43,11 +43,11 @@ export function moyenne(note: number[]): number | string {
 // find() renvoie undefined quand rien ne correspond.
 // La deuxième fonction l'ignore complètement.
 
-export function trouverParId(liste: film[], id: number): film | undefined {
+export function trouverParId(liste: Film[], id: number): Film | undefined {
   return liste.find((film) => film.id === id);
 }
 
-export function titreDuFilm(liste: film[], id: number): string | undefined {
+export function titreDuFilm(liste: Film[], id: number): string | undefined {
   return trouverParId(liste, id)?.titre;
 }
 
@@ -55,7 +55,7 @@ export function titreDuFilm(liste: film[], id: number): string | undefined {
 // On trie par une clé passée en paramètre. Rien ne garantit que cette
 // clé existe sur les objets de la liste.
 
-export function trierPar(liste: film[], cle: keyof(film)): film[] {
+export function trierPar<T>(liste: T[], cle: keyof T): T[] {
   return [...liste].sort((a, b) => (a[cle] > b[cle] ? 1 : -1));
 }
 
@@ -64,7 +64,7 @@ export function trierPar(liste: film[], cle: keyof(film)): film[] {
 // --- 5. Un paramètre optionnel jamais vérifié -------------------------
 // Appelée sans genre, cette fonction filtre sur `undefined`.
 
-export function filtrerParGenre(liste: film[], genre: genre | undefined): film[] {
+export function filtrerParGenre(liste: Film[], genre: Genre | undefined): Film[] {
   if (genre !== undefined){
     return liste.filter((film) => film.genres.includes(genre));
   };
@@ -77,11 +77,11 @@ export function filtrerParGenre(liste: film[], genre: genre | undefined): film[]
 // `statut` est une chaîne quelconque : rien n'empêche d'écrire "Vu",
 // "vue" ou "à voir". Une faute de frappe passe inaperçue.
 
-export function estVu(film: film): boolean {
+export function estVu(film: Film): boolean {
   return film.statut === "vu";
 }
 
-export function libelleStatut(film: film): string {
+export function libelleStatut(film: Film): string {
   if (film.statut === "vu") return "Déjà vu";
   if (film.statut === "a_voir") return "À voir";
   if (film.statut === "abandonne") return "Abandonné";
@@ -105,7 +105,7 @@ export function enregistrerFavoris(favoris: number[]): void {
 // On veut pouvoir modifier un ou plusieurs champs d'un film, sans avoir
 // à tous les repasser. Quel type décrit « quelques champs de Film » ?
 
-export function mettreAJour(film: film, modifications: Partial<film>): film {
+export function mettreAJour(film: Film, modifications: Partial<Film>): Film {
   return { ...film, ...modifications };
 }
 
@@ -115,7 +115,7 @@ export function mettreAJour(film: film, modifications: Partial<film>): film {
 
 let prochainId = 100;
 
-export function creer(nouveauFilm: Omit<film, "id">): film {
+export function creer(nouveauFilm: Omit<Film, "id">): Film {
   return { id: prochainId++, ...nouveauFilm };
 }
 
@@ -123,7 +123,7 @@ export function creer(nouveauFilm: Omit<film, "id">): film {
 // Cette fonction modifie l'objet reçu au lieu d'en renvoyer un nouveau.
 // Le typage ne l'interdira pas — mais `readonly` peut aider.
 
-export function ajouterNote(film: Readonly<film>, nouvelleNote: number): film {
+export function ajouterNote(film: Readonly<Film>, nouvelleNote: number): Film {
   return {
     ...film,
     note: (film.note + nouvelleNote) / 2,

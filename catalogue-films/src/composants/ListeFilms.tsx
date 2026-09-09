@@ -1,4 +1,4 @@
-import type { film as Film, statut as StatutFilm } from "../lib/utils";
+import type { Film as Film, Statut as StatutFilm } from "../lib/utils";
 import { Badge, type TonBadge } from "./Badge";
 import { Bouton } from "./Bouton";
 import { Carte } from "./Carte";
