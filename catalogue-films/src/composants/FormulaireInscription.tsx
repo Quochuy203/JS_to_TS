@@ -1,0 +1,116 @@
+// src/composants/FormulaireInscription.tsx
+import { useState } from "react";
+import type { ChangeEvent, FormEvent } from "react";
+import { valider, inscriptionInitiale } from "../lib/inscription";
+import type { Inscription, ErreurIncription } from "../lib/inscription";
+import { ChampTexte } from "./ChampTexte";
+import { Bouton } from "./Bouton";
+
+export interface FormulaireInscriptionProps {
+  onInscription: (donnees: Inscription) => void;
+}
+
+export function FormulaireInscription({ onInscription }: FormulaireInscriptionProps) {
+  const [donnees, setDonnees] = useState<Inscription>(inscriptionInitiale);
+  const [erreurs, setErreurs] = useState<ErreurIncription>({});
+  const [envoiEnCours, setEnvoiEnCours] = useState(false);
+
+  const gererSaisie = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type, checked } = e.target;
+    const valeur = type === "checkbox" ? checked : value;
+    setDonnees((d) => ({ ...d, [name]: valeur }));
+  };
+
+  const gererEnvoi = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const trouvees = valider(donnees);
+    setErreurs(trouvees);
+
+    if (Object.keys(trouvees).length > 0) return;
+
+    setEnvoiEnCours(true);
+
+    window.setTimeout(() => {
+      onInscription(donnees);
+      setDonnees(inscriptionInitiale);
+      setErreurs({});
+      setEnvoiEnCours(false);
+    }, 600);
+  };
+
+  return (
+    <form
+      onSubmit={gererEnvoi}
+      noValidate
+      className="flex flex-col gap-4 rounded-xl bg-white p-6 shadow-sm"
+    >
+        <ChampTexte
+            nom="nom"
+            label="Nom"
+            valeur={donnees.nom}
+            onChange={gererSaisie}
+            erreur={erreurs.nom}
+        />
+        <ChampTexte
+        nom="prenom"
+        label="Prénom"
+        valeur={donnees.prenom}
+        onChange={gererSaisie}
+        erreur={erreurs.prenom}
+        />
+
+      <ChampTexte
+        nom="email"
+        label="Email"
+        type="email"
+        valeur={donnees.email}
+        onChange={gererSaisie}
+        erreur={erreurs.email}
+      />
+
+      <ChampTexte
+        nom="motDePasse"
+        label="Mot de passe"
+        type="password"
+        valeur={donnees.motDePasse}
+        onChange={gererSaisie}
+        erreur={erreurs.motDePasse}
+      />
+
+      <ChampTexte
+        nom="confirmerMotDePasse"
+        label="Confirmation du mot de passe"
+        type="password"
+        valeur={donnees.confirmerMotDePasse}
+        onChange={gererSaisie}
+        erreur={erreurs.confirmerMotDePasse}
+        />
+
+      <div className="flex flex-col gap-1">
+        <label className="flex items-center gap-2 text-sm text-slate-700">
+          <input
+            type="checkbox"
+            name="cgv"
+            checked={donnees.cgv}
+            onChange={gererSaisie}
+            aria-invalid={!!erreurs.cgv}
+            aria-describedby={erreurs.cgv ? "cgv-erreur" : undefined}
+          />
+          J'accepte les conditions d'utilisation
+        </label>
+        {erreurs.cgv && (
+          <p id="cgv-erreur" className="text-sm text-red-600">
+            {erreurs.cgv}
+          </p>
+        )}
+      </div>
+
+      <Bouton
+        libelle={envoiEnCours ? "Envoi en cours…" : "Créer le compte"}
+        type="submit"
+        desactive={envoiEnCours}
+      />
+    </form>
+  );
+}

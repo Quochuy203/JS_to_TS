@@ -1,11 +1,18 @@
 export type VarianteBouton = "primaire" | "secondaire" | "danger";
+export type TypeBouton = "button" | "submit"
 
-export interface BoutonProps {
+export interface BoutonProps   {
   libelle: string;
-  variante?: VarianteBouton;   // "primaire" par défaut
-  desactive?: boolean;         // false par défaut
+  variante?: VarianteBouton;
+  desactive?: boolean;
   onClick?: () => void;
+  type?: TypeBouton;
 }
+
+const base =
+  "px-4 py-2 rounded-lg font-medium transition-colors " +
+  "focus:outline-none focus:ring-2 focus:ring-offset-1 " +
+  "disabled:opacity-50 disabled:cursor-not-allowed";
 
 const stylesVariante: Record<VarianteBouton, string> = {
   primaire: "bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500",
@@ -18,17 +25,18 @@ export function Bouton({
   variante = "primaire",
   desactive = false,
   onClick,
+  type = "button",
 }: BoutonProps) {
   return (
     <button
-      type="button"
+      type={type}
       disabled={desactive}
       onClick={onClick}
-      className={`px-4 py-2 rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 ${
-        stylesVariante[variante]
-      } ${desactive ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
+      className={`${base} ${stylesVariante[variante]}`}
     >
       {libelle}
     </button>
   );
 }
+
+
