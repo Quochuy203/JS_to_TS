@@ -86,7 +86,7 @@ export function FormulaireInscription({ onInscription }: FormulaireInscriptionPr
         onChange={gererSaisie}
         erreur={erreurs.confirmerMotDePasse}
         />
-
+    
       <div className="flex flex-col gap-1">
         <label className="flex items-center gap-2 text-sm text-slate-700">
           <input
