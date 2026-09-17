@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import type { FilmOmdb, ReponseRecherche } from "../lib/omdb";
 import { construireUrlRecherche } from "../lib/omdb";
 import { CarteFilm } from "./CarteFilm";
+import { Link } from "react-router-dom";
 
 export function RechercheFilms() {
   const [terme, setTerme] = useState("");
@@ -93,7 +94,9 @@ export function RechercheFilms() {
           <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 list-none p-0">
             {films.map((film) => (
               <li key={film.imdbID}>
-                <CarteFilm film={film} />
+                <Link to={`/films/${film.imdbID}`}>
+                    <CarteFilm film={film} />
+                </Link>
               </li>
             ))}
           </ul>
