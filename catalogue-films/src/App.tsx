@@ -7,6 +7,8 @@ import { Inscription } from "./pages/Inscription";
 import { PageIntrouvable } from "./pages/PageIntrouvable";
 import { DetailFilm } from "./pages/DetailFilm";
 import { Connexion } from "./pages/Connexion";
+import { RouteProtegee } from "./composants/RouteProtegee";
+import { Favoris } from "./pages/Favoris";
 
 function App() {
   return (
@@ -16,14 +18,19 @@ function App() {
         <Route path="recherche" element={<Recherche />} />
         <Route path="inscription" element={<Inscription />} />
         <Route path="films/:id" element={<DetailFilm />} />
-        <Route path="*" element={<PageIntrouvable />} />
         <Route path="connexion" element={<Connexion />} />
+        <Route
+          path="favoris"
+          element={
+            <RouteProtegee>
+              <Favoris />
+            </RouteProtegee>
+          }
+        />
+        <Route path="*" element={<PageIntrouvable />} />
       </Route>
     </Routes>
   );
 }
-// trong <Routes>
-<Route path="films/:id" element={<DetailFilm />} />
 
 export default App;
-

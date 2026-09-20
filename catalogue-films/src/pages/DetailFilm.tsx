@@ -3,12 +3,15 @@ import { useParams } from "react-router-dom";
 import { useFetch } from "../hooks/useFetch";
 import type { FilmDetailOmdb } from "../lib/omdb";
 import { urlDetail, afficheDisponible } from "../lib/omdb";
+import { useFavoris } from "../contextes/FavorisContext";
+import { Bouton } from "../composants/Bouton";
 
 export function DetailFilm() {
   const { id } = useParams();
   const { donnees, chargement, erreur } = useFetch<FilmDetailOmdb>(
     id ? urlDetail(id) : null
   );
+  const { dispatch } = useFavoris();
 
   if (chargement) {
     return <p className="max-w-3xl mx-auto px-4 py-10 text-slate-500">Chargement…</p>;
@@ -42,6 +45,24 @@ export function DetailFilm() {
       )}
 
       <p className="mt-4 text-slate-700">{donnees.Plot}</p>
+
+      <div className="mt-6">
+        <Bouton
+          libelle="Ajouter aux favoris"
+          onClick={() =>
+            dispatch({
+              type: "ajouter",
+              film: {
+                imdbID: donnees.imdbID,
+                Title: donnees.Title,
+                Year: donnees.Year,
+                Type: donnees.Type,
+                Poster: donnees.Poster,
+              },
+            })
+          }
+        />
+      </div>
     </div>
   );
 }

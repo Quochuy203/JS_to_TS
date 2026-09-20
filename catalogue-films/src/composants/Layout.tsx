@@ -1,6 +1,7 @@
 // src/composants/Layout.tsx
 import { NavLink, Outlet } from "react-router-dom";
 import { useAuth } from "../contextes/AuthContext";
+import { useFavoris } from "../contextes/FavorisContext";
 
 export function Layout() {
   const { pseudo, deconnecter } = useAuth();
